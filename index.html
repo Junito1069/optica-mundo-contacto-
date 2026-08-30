@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#050505" />
+    <title>HI PRO | Precision Optics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-label" aria-hidden="true">VIEW</div>
+
+    <header class="site-header" id="siteHeader">
+      <a class="brand" href="#home" aria-label="HI PRO home">HI <span>PRO</span></a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#home" class="active">HOME</a>
+        <a href="#eyewear">EYEWEAR</a>
+        <a href="#collection">SUNGLASSES</a>
+        <a href="#collection">COLLECTIONS</a>
+        <a href="#manifesto">ABOUT</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="text-control" data-search-open data-cursor="EXPLORE">SEARCH</button>
+        <button class="text-control desktop-only" data-cursor="VIEW">ACCOUNT</button>
+        <button class="cart-control" data-cursor="VIEW" aria-label="Cart">CART <span>0</span></button>
+        <button class="menu-control" id="menuToggle" aria-expanded="false" aria-label="Open menu"><i></i><i></i></button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <a href="#home">HOME</a><a href="#eyewear">EYEWEAR</a><a href="#collection">SUNGLASSES</a><a href="#collection">COLLECTIONS</a><a href="#manifesto">ABOUT</a>
+    </div>
+
+    <main>
+      <section class="hero" id="home" aria-labelledby="hero-title">
+        <div class="hero-meta hero-meta-left">EST. 2026<br />OPTICAL ENGINEERING</div>
+        <div class="hero-meta hero-meta-right">01 / 04<br />SERIES ONE</div>
+        <div class="hero-copy reveal">
+          <p class="eyebrow">HI PRO OPTICAL SYSTEMS</p>
+          <h1 id="hero-title">PRECISION<br /><em>OPTICS.</em></h1>
+          <p class="hero-description">Engineered for the way you see the world.</p>
+          <a class="line-link" href="#eyewear" data-cursor="EXPLORE">DISCOVER THE COLLECTION <span>↘</span></a>
+        </div>
+
+        <div class="eyewear-stage" id="eyewearStage" data-cursor="DRAG" tabindex="0" aria-label="Interactive HI PRO frame render">
+          <div class="stage-glow"></div><div class="frame-shadow"></div>
+          <svg class="hero-frame" viewBox="0 0 1000 580" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HI PRO black optical frame">
+            <defs>
+              <linearGradient id="frameMetal" x1="116" y1="116" x2="836" y2="466" gradientUnits="userSpaceOnUse"><stop stop-color="#888"/><stop offset=".23" stop-color="#202020"/><stop offset=".51" stop-color="#050505"/><stop offset=".74" stop-color="#525252"/><stop offset="1" stop-color="#0A0A0A"/></linearGradient>
+              <radialGradient id="lensTint" cx="0" cy="0" r="1" gradientTransform="translate(305 292) rotate(32) scale(190 142)" gradientUnits="userSpaceOnUse"><stop stop-color="#9AA6AF" stop-opacity=".28"/><stop offset=".58" stop-color="#15222A" stop-opacity=".16"/><stop offset="1" stop-color="#050505" stop-opacity=".66"/></radialGradient>
+              <filter id="softBlur" x="0" y="0" width="100%" height="100%"><feGaussianBlur stdDeviation="8"/></filter>
+            </defs>
+            <path d="M94 210L10 150L0 174L78 267" stroke="#191919" stroke-width="28" stroke-linecap="round"/><path d="M906 210L990 150L1000 174L922 267" stroke="#191919" stroke-width="28" stroke-linecap="round"/>
+            <path d="M218 202C154 206 116 255 126 332C136 407 189 450 285 448C382 446 431 399 429 311C427 234 372 197 306 199L218 202Z" fill="url(#frameMetal)"/><path d="M782 202C846 206 884 255 874 332C864 407 811 450 715 448C618 446 569 399 571 311C573 234 628 197 694 199L782 202Z" fill="url(#frameMetal)"/>
+            <path d="M226 221C175 225 145 260 153 325C161 384 202 422 284 420C365 418 405 382 405 315C405 256 370 220 305 220L226 221Z" fill="url(#lensTint)" stroke="#6E7779" stroke-opacity=".55" stroke-width="2"/><path d="M774 221C825 225 855 260 847 325C839 384 798 422 716 420C635 418 595 382 595 315C595 256 630 220 695 220L774 221Z" fill="url(#lensTint)" stroke="#6E7779" stroke-opacity=".55" stroke-width="2"/>
+            <path d="M422 256C458 242 542 242 578 256" stroke="#363636" stroke-width="24" stroke-linecap="round"/><path d="M422 255C458 250 542 250 578 255" stroke="#909090" stroke-opacity=".4" stroke-width="2" stroke-linecap="round"/><path d="M193 198C246 177 358 177 406 218" stroke="#C9C9C9" stroke-opacity=".32" stroke-width="4" filter="url(#softBlur)"/>
+            <circle cx="137" cy="237" r="10" fill="#B4B4B4"/><circle cx="863" cy="237" r="10" fill="#B4B4B4"/><path d="M244 235C208 241 187 261 179 292" stroke="#E9F6F7" stroke-opacity=".3" stroke-width="11" stroke-linecap="round"/><path d="M756 235C792 241 813 261 821 292" stroke="#E9F6F7" stroke-opacity=".3" stroke-width="11" stroke-linecap="round"/>
+          </svg>
+          <span class="stage-point point-left"><i></i> TITANIUM CORE</span><span class="stage-point point-right"><i></i> HIGH-INDEX LENS</span><span class="stage-index">HP-01</span>
+        </div>
+        <div class="scroll-prompt"><span></span> SCROLL TO EXPLORE</div>
+      </section>
+
+      <section class="intro-section" id="eyewear" aria-labelledby="intro-title">
+        <div class="section-kicker">[ 01 / EYEWEAR ]</div>
+        <div class="intro-grid"><h2 id="intro-title" class="reveal">BUILT FOR<br />THE <em>EXCEPTIONAL.</em></h2><div class="intro-copy reveal"><p>Frames designed as precision instruments. Every line, angle and material is considered for an experience that feels as refined as the way it performs.</p><a class="line-link" href="#collection" data-cursor="VIEW">EXPLORE EYEWEAR <span>↘</span></a></div></div>
+        <div class="material-strip reveal" aria-label="HI PRO material qualities"><span>01&nbsp; JAPANESE TITANIUM</span><span>02&nbsp; ZEISS OPTICS</span><span>03&nbsp; HAND FINISHED</span><span>04&nbsp; LIMITED SERIES</span></div>
+      </section>
+
+      <section class="collection-preview" id="collection" aria-labelledby="collection-title">
+        <div class="section-kicker">[ 02 / SELECTED OBJECTS ]</div><div class="collection-heading"><h2 id="collection-title">THE <em>FIRST</em><br />EDITION.</h2><a href="#collection" class="line-link" data-cursor="EXPLORE">VIEW ALL OBJECTS <span>↘</span></a></div>
+        <div class="object-grid">
+          <article class="object-card reveal" data-cursor="VIEW"><div class="object-number">01</div><div class="object-visual object-one"><span></span></div><div class="object-info"><div><h3>AXIS 01</h3><p>OPTICAL FRAME / ONYX</p></div><strong>$420</strong></div><div class="object-action">VIEW PRODUCT <span>↗</span></div></article>
+          <article class="object-card reveal" data-cursor="VIEW"><div class="object-number">02</div><div class="object-visual object-two"><span></span></div><div class="object-info"><div><h3>ARC 02</h3><p>SUNGLASSES / SMOKE</p></div><strong>$460</strong></div><div class="object-action">VIEW PRODUCT <span>↗</span></div></article>
+        </div>
+      </section>
+
+      <section class="manifesto" id="manifesto"><div class="manifesto-label">HI PRO / OPTICAL CULTURE</div><p class="reveal">VISION IS NOT A<br /><em>PASSIVE</em> EXPERIENCE.</p><a class="line-link" href="#home" data-cursor="EXPLORE">OUR POINT OF VIEW <span>↗</span></a></section>
+    </main>
+
+    <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search eyewear"><button class="search-close" data-search-close aria-label="Close search">CLOSE <span>×</span></button><div class="search-panel"><p>SEARCH THE ARCHIVE</p><label><span>⌕</span><input id="searchInput" autocomplete="off" placeholder="Search eyewear..." /></label><div id="searchResults" class="search-results"></div></div></div>
+    <script src="js/main.js"></script>
+  </body>
+</html>

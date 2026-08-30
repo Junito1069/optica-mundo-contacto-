@@ -1,0 +1,140 @@
+@media (max-width: 900px) {
+  .site-header {
+    padding-inline: 32px;
+  }
+
+  .desktop-nav {
+    gap: 18px;
+    margin-left: 4vw;
+  }
+
+  .nav-actions {
+    gap: 16px;
+  }
+
+  .intro-section,
+  .collection-preview {
+    padding-inline: 5vw;
+  }
+
+  .object-card {
+    min-height: 500px;
+  }
+
+  .object-card:nth-child(2) {
+    display: block;
+  }
+
+  .object-visual {
+    height: 340px;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    height: 66px;
+    padding-inline: 22px;
+  }
+
+  .site-header.scrolled {
+    height: 60px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .nav-actions {
+    gap: 13px;
+  }
+
+  .text-control,
+  .cart-control {
+    font-size: 9px;
+  }
+
+  .mobile-menu {
+    inset-block-start: 66px;
+  }
+
+  .intro-section,
+  .collection-preview {
+    padding: 88px 22px;
+  }
+
+  .intro-grid {
+    gap: 28px;
+    padding: 42px 0 56px;
+  }
+
+  .collection-preview {
+    padding-top: 78px;
+  }
+
+  .collection-heading {
+    padding: 38px 0;
+  }
+
+  .object-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .object-card,
+  .object-card:nth-child(2) {
+    display: block;
+    min-height: 440px;
+  }
+
+  .object-visual {
+    height: 270px;
+  }
+
+  .object-visual span,
+  .object-two span {
+    transform: scale(.82) rotate(-8deg);
+  }
+
+  .object-two span {
+    transform: scale(.78) rotate(7deg);
+  }
+
+  .object-action {
+    bottom: 0;
+    left: 22px;
+    right: 22px;
+    min-height: 52px;
+  }
+
+  .object-info {
+    padding-bottom: 66px;
+  }
+
+  .manifesto {
+    min-height: 500px;
+    padding: 110px 22px 72px;
+  }
+
+  .manifesto p {
+    font-size: clamp(40px, 12vw, 58px);
+    margin-bottom: 36px;
+  }
+}
+
+@media (max-width: 390px) {
+  .nav-actions {
+    gap: 10px;
+  }
+
+  .text-control {
+    display: none;
+  }
+
+  .object-card {
+    padding: 20px;
+  }
+
+  .object-action {
+    left: 20px;
+    right: 20px;
+  }
+}

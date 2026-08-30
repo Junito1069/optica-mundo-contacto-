@@ -1,0 +1,61 @@
+{
+  "users": [
+    {
+      "id": "1b68193e-1a3d-4d0e-9d26-7679d225091b",
+      "name": "junior",
+      "email": "jjblannmer@gmail.com",
+      "passwordHash": "$2b$12$67yjPWG9XHP6swExm0q3OefWfjp0BmXWYyrqtdaLCi0O1e9slsnuq",
+      "createdAt": "2026-08-12T18:37:55.683Z"
+    },
+    {
+      "id": "85acfb15-0176-44b5-b108-79f748cfbecb",
+      "name": "jose",
+      "email": "juniorblancojose@icloud.com",
+      "passwordHash": "$2b$12$sN61OKDFVyDfHtTd5kTB9uJCWpQOnmt2cTWK8c9N4PrkMkeGyDDT2",
+      "createdAt": "2026-08-13T20:10:44.096Z"
+    },
+    {
+      "id": "9f6efe44-6819-426b-943a-024936f959e2",
+      "name": "juan prueba",
+      "email": "juanprueba@example.com",
+      "passwordHash": "$2b$12$Abydb3s22R90oyBI/RFuD.frGMorfQXLHM5lsJ.Bb/3/zFrK6vKHC",
+      "createdAt": "2026-08-13T20:58:01.910Z"
+    },
+    {
+      "id": "2ac36b68-f3db-48a0-bfa8-0bb3faa11d06",
+      "name": "junior",
+      "email": "jjblanmer@gmail.com",
+      "passwordHash": "$2b$12$FOeyZ8uCbVx6BXhx5AcKT.uiK80m0xxjBNesl/uuxtor5kEysolv2",
+      "createdAt": "2026-08-19T00:21:00.783Z"
+    },
+    {
+      "id": "de9a465f-7ca3-48b7-9d15-26cc5247cfb0",
+      "name": "Prueba Flujo",
+      "email": "prueba.flujo.20260819@example.com",
+      "passwordHash": "$2b$12$29NKY5GNrk0E43asZBPRmeo61wfohp3n3aATnaqOHdusGWJqEYb16",
+      "createdAt": "2026-08-19T00:24:22.328Z"
+    }
+  ],
+  "sessions": [
+    {
+      "userId": "85acfb15-0176-44b5-b108-79f748cfbecb",
+      "tokenHash": "23baf582163325efe36d325886aa33a76ee89d11697645de7be04673adfe823e",
+      "expiresAt": "2026-09-12T20:11:16.716Z"
+    },
+    {
+      "userId": "9f6efe44-6819-426b-943a-024936f959e2",
+      "tokenHash": "f98b05eadfca5a7fb0ea88a2202884aeadb6ce0745dcc65e33ea1366439e77fc",
+      "expiresAt": "2026-09-12T20:58:01.922Z"
+    },
+    {
+      "userId": "de9a465f-7ca3-48b7-9d15-26cc5247cfb0",
+      "tokenHash": "bf64c9d3c96a21bf90ee9c2b50ef4bcb57bd1286b629a339cdcce213202d6be5",
+      "expiresAt": "2026-09-18T00:24:49.010Z"
+    },
+    {
+      "userId": "2ac36b68-f3db-48a0-bfa8-0bb3faa11d06",
+      "tokenHash": "67c6dbe03d5846e4f388e310fa9a7f3773b4678394117175a8fac6b47ba01fca",
+      "expiresAt": "2026-09-18T00:49:20.672Z"
+    }
+  ]
+}

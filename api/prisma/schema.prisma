@@ -1,0 +1,246 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AdminRole {
+  ADMIN
+  EMPLOYEE
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  UNPUBLISHED
+}
+
+enum InventoryMovementType {
+  ENTRY
+  EXIT
+  ADJUSTMENT
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PromotionType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model AdminUser {
+  id                 String              @id @default(uuid())
+  name               String
+  email              String              @unique
+  passwordHash       String
+  role               AdminRole           @default(EMPLOYEE)
+  active             Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  lastLoginAt        DateTime?
+  sessions           AdminSession[]
+  inventoryMovements InventoryMovement[]
+  auditLogs          AuditLog[]
+}
+
+model AdminSession {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model CustomerUser {
+  id           String            @id @default(uuid())
+  name         String
+  email        String            @unique
+  passwordHash String
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  lastLoginAt  DateTime?
+  sessions     CustomerSession[]
+  profile      Profile?
+  orders       Order[]
+}
+
+model Profile {
+  id          String       @id @default(uuid())
+  userId      String       @unique
+  phone       String
+  address     String
+  city        String
+  sector      String
+  reference   String
+  address2    String?
+  postalCode  String?
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        CustomerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CustomerSession {
+  id        String       @id @default(uuid())
+  tokenHash String       @unique
+  expiresAt DateTime
+  createdAt DateTime     @default(now())
+  userId    String
+  user      CustomerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id              String               @id @default(uuid())
+  name            String
+  slug            String               @unique
+  description     String
+  categoryId      String
+  price           Decimal              @db.Decimal(12, 2)
+  compareAtPrice  Decimal?             @db.Decimal(12, 2)
+  sku             String               @unique
+  stock           Int                  @default(0)
+  minimumStock    Int                  @default(0)
+  status          ProductStatus        @default(DRAFT)
+  featured        Boolean              @default(false)
+  imageUrl        String?
+  brand           String?
+  type            String?
+  duration        String?
+  material        String?
+  boxContent      String?
+  baseCurve       String?
+  diameter        String?
+  power           String?
+  cylinder        String?
+  axis            String?
+  addition        String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  category        Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  orderItems      OrderItem[]
+  inventoryEvents InventoryMovement[]
+
+  @@index([categoryId, status])
+  @@index([status, featured])
+}
+
+model InventoryMovement {
+  id        String                @id @default(uuid())
+  productId String
+  userId    String?
+  type      InventoryMovementType
+  quantity  Int
+  reason    String
+  createdAt DateTime              @default(now())
+  product   Product               @relation(fields: [productId], references: [id], onDelete: Restrict)
+  user      AdminUser?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model Order {
+  id                String        @id @default(uuid())
+  orderNumber       String        @unique
+  customerId        String?
+  customerEmail     String
+  customerName      String
+  customerPhone     String
+  deliveryAddress   String
+  deliveryCity      String
+  deliverySector    String
+  deliveryReference String
+  deliveryAddress2  String?
+  deliveryPostalCode String?
+  deliveryNotes     String?
+  paymentMethod     String        @default("PAGO CONTRA ENTREGA")
+  status            OrderStatus   @default(PENDING)
+  subtotal          Decimal       @db.Decimal(12, 2)
+  discountTotal     Decimal       @default(0) @db.Decimal(12, 2)
+  shippingTotal     Decimal       @default(0) @db.Decimal(12, 2)
+  total             Decimal       @db.Decimal(12, 2)
+  currency          String        @default("DOP")
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  customer          CustomerUser? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items             OrderItem[]
+
+  @@index([customerId, createdAt])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String?
+  name      String
+  sku       String
+  unitPrice Decimal  @db.Decimal(12, 2)
+  quantity  Int
+  total     Decimal  @db.Decimal(12, 2)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Promotion {
+  id        String        @id @default(uuid())
+  name      String
+  code      String?       @unique
+  type      PromotionType
+  value     Decimal       @db.Decimal(12, 2)
+  active    Boolean       @default(false)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model AuditLog {
+  id        String     @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String
+  metadata  Json?
+  createdAt DateTime   @default(now())
+  user      AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId, createdAt])
+  @@index([userId, createdAt])
+}

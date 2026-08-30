@@ -1,0 +1,56 @@
+.category-catalog{min-height:100svh;padding:158px 8.5vw 130px;background:var(--black-soft)}
+.category-heading{display:flex;align-items:end;justify-content:space-between;gap:40px;padding:0 0 72px;border-bottom:1px solid var(--line)}
+.category-heading .section-kicker{margin:0 0 27px;color:var(--acid)}
+.category-heading h1{font-size:clamp(50px,7vw,104px)}
+.category-heading>p{max-width:330px;margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.category-toolbar{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:22px 0;border-bottom:1px solid var(--line)}
+.category-filters{display:flex;gap:10px;flex-wrap:wrap}
+.category-toolbar button{padding:10px 13px;border:1px solid var(--line);background:transparent;color:var(--muted);font:500 10px/1 var(--mono);letter-spacing:.08em;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.category-toolbar button:hover,.category-toolbar button.active{background:var(--acid);border-color:var(--acid);color:#111}
+.category-results{display:flex;justify-content:space-between;padding:20px 0;font:400 10px/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
+.category-results span:last-child{color:var(--acid)}
+.category-grid .object-card{min-height:485px}
+.category-grid .object-visual{height:325px}
+.product-catalog{min-height:100svh;padding:136px 8.5vw 130px;background:var(--black)}
+.product-archive-label{padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--acid);font:400 10px/1 var(--mono);letter-spacing:.12em}
+.product-catalog-heading{display:flex;align-items:end;justify-content:space-between;gap:40px;padding:58px 0}
+.product-catalog-heading h1{font-size:clamp(50px,7vw,104px)}
+.product-catalog-heading p{max-width:310px;margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.product-search-row{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;align-items:end;padding:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.product-search{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--muted);padding:15px 0;color:var(--acid)}
+.product-search span{font:28px/1 var(--display)}
+.product-search input{width:100%;padding:0;border:0;outline:0;background:transparent;color:var(--white);font:500 clamp(13px,1.6vw,18px)/1 var(--mono);letter-spacing:.03em}
+.product-search input::placeholder{color:var(--muted);opacity:1}
+.product-search:focus-within{border-color:var(--acid)}
+.product-sort{display:grid;gap:8px;color:var(--muted);font:400 9px/1 var(--mono);letter-spacing:.1em}
+.product-sort select{width:100%;border:0;border-bottom:1px solid var(--muted);border-radius:0;outline:0;background:var(--black);color:var(--white);padding:11px 0;font:500 10px var(--mono);letter-spacing:.06em;cursor:pointer}
+.product-results{display:flex;justify-content:space-between;padding:20px 0;font:400 10px/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
+.product-results span:last-child{color:var(--acid)}
+.product-grid .object-card{min-height:485px}
+.product-grid .object-visual{height:325px}
+.product-empty{margin:0;padding:80px 0;border-top:1px solid var(--line);color:var(--muted);font:400 11px/1 var(--mono);letter-spacing:.1em;text-align:center}
+
+@media(max-width:760px){
+  .category-catalog{padding:112px 22px 72px}
+  .category-heading{display:block;padding-bottom:46px}
+  .category-heading>p{margin-top:28px}
+  .category-toolbar{display:block;padding:20px 0}
+  .category-filters{gap:8px}
+  .category-toolbar button{padding:9px 10px;font-size:9px}
+  .category-results{padding:18px 0;font-size:9px}
+  .category-results span:last-child{max-width:52%;text-align:right}
+  .category-grid .object-card{min-height:440px}
+  .category-grid .object-visual{height:270px}
+  .product-catalog{padding:105px 22px 72px}
+  .product-catalog-heading{display:block;padding:43px 0}
+  .product-catalog-heading p{margin-top:28px}
+  .product-search-row{grid-template-columns:1fr;gap:20px;padding:20px 0}
+  .product-search{padding:13px 0}
+  .product-search span{font-size:24px}
+  .product-search input{font-size:12px}
+  .product-sort{width:100%}
+  .product-results{padding:18px 0;font-size:9px}
+  .product-results span:last-child{max-width:52%;text-align:right}
+  .product-grid .object-card{min-height:440px}
+  .product-grid .object-visual{height:270px}
+}
