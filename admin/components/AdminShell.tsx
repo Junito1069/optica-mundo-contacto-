@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Boxes, LayoutDashboard, LogOut, PackageSearch, Tags } from "lucide-react";
+import { Boxes, FileText, LayoutDashboard, LogOut, PackageSearch, Tags, Users } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,6 +14,8 @@ const navigation = [
   { href: "/categories", label: "Categorías", icon: Tags },
   { href: "/orders", label: "Pedidos", icon: PackageSearch },
   { href: "/inventory", label: "Inventario", icon: Boxes },
+  { href: "/users", label: "Usuarios", icon: Users },
+  { href: "/formulas", label: "Fórmulas", icon: FileText },
 ];
 
 export function AdminShell({ children }: { children: (user: AdminUser) => React.ReactNode }) {

@@ -20,6 +20,7 @@ export default function CategoriesPage() {
     if (response.ok) setCategories((await response.json() as { data: Category[] }).data);
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void loadCategories(); }, []);
 
   async function createCategory(event: FormEvent<HTMLFormElement>) {

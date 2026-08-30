@@ -23,6 +23,7 @@ export default function ProductsPage() {
     if (response.ok) setProducts((await response.json() as { data: Product[] }).data);
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void loadProducts(); void fetch(`${apiUrl}/api/admin/categories`, { credentials: "include", cache: "no-store" }).then(async (response) => response.ok ? response.json() : null).then((payload: { data: Category[] } | null) => setCategories(payload?.data ?? [])); }, []);
 
   useEffect(() => { const timer = window.setTimeout(() => void loadProducts(query), 250); return () => window.clearTimeout(timer); }, [query]);

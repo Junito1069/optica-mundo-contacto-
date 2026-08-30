@@ -26,6 +26,7 @@ export default function InventoryPage() {
   }
 
   useEffect(() => { void fetch(`${apiUrl}/api/admin/products`, { credentials: "include", cache: "no-store" }).then(async (response) => response.ok ? response.json() : null).then((payload: { data: Product[] } | null) => { const nextProducts = payload?.data ?? []; setProducts(nextProducts); if (nextProducts[0]) setProductId(nextProducts[0].id); }); }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void loadInventory(productId); }, [productId]);
 
   async function submitMovement(event: FormEvent<HTMLFormElement>) {
