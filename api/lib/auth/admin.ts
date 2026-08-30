@@ -7,7 +7,7 @@ import { ApiError } from "@/lib/http/response";
 
 export const adminSessionCookieName = "mundo_contacto_admin_session";
 const sessionDurationMs = 1000 * 60 * 60 * 12;
-const defaultAdminEmail = "admin@admin.com";
+const defaultAdminEmail = "admin@gmail.com";
 const defaultAdminPassword = "admin";
 
 export type AdminSessionUser = {
@@ -27,8 +27,24 @@ function toSessionUser(user: AdminSessionUser): AdminSessionUser {
 
 async function ensureDefaultAdminUser() {
   const prisma = getPrisma();
+
+  await prisma.adminUser.deleteMany({
+    where: {
+      email: { not: defaultAdminEmail },
+    },
+  });
+
   const existing = await prisma.adminUser.findUnique({ where: { email: defaultAdminEmail } });
-  if (existing) return existing;
+  if (existing) {
+    if (existing.role !== "ADMIN" || !existing.active) {
+      await prisma.adminUser.update({
+        where: { id: existing.id },
+        data: { role: "ADMIN", active: true },
+      });
+    }
+    return await prisma.adminUser.findUnique({ where: { email: defaultAdminEmail } });
+  }
+
   const passwordHash = await bcrypt.hash(defaultAdminPassword, 12);
   return prisma.adminUser.create({
     data: {
@@ -44,11 +60,16 @@ async function ensureDefaultAdminUser() {
 export async function authenticateAdmin(email: string, password: string) {
   const prisma = getPrisma();
   const normalizedEmail = email.trim().toLowerCase();
+
+  if (normalizedEmail !== defaultAdminEmail) {
+    return null;
+  }
+
   const user = await prisma.adminUser.findUnique({ where: { email: normalizedEmail } });
   if (user && user.active && (await bcrypt.compare(password, user.passwordHash))) return toSessionUser(user);
 
-  if (normalizedEmail === defaultAdminEmail && password === defaultAdminPassword) {
-    const defaultUser = await ensureDefaultAdminUser();
+  const defaultUser = await ensureDefaultAdminUser();
+  if (defaultUser && defaultUser.active && (await bcrypt.compare(password, defaultUser.passwordHash))) {
     return toSessionUser(defaultUser);
   }
 

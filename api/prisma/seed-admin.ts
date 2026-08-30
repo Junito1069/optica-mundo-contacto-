@@ -4,7 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 
 const fallbackName = "Administrador";
-const fallbackEmail = "admin@admin.com";
+const fallbackEmail = "admin@gmail.com";
 const fallbackPassword = "admin";
 
 const name = process.env.INITIAL_ADMIN_NAME?.trim() ?? fallbackName;
@@ -23,13 +23,19 @@ async function main() {
 
   const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: databaseUrl }) });
   try {
+    await prisma.adminUser.deleteMany({
+      where: {
+        email: { not: email },
+      },
+    });
+
     const passwordHash = await bcrypt.hash(password, 12);
     await prisma.adminUser.upsert({
       where: { email },
       create: { name, email, passwordHash, role: "ADMIN", active: true },
       update: { name, passwordHash, role: "ADMIN", active: true },
     });
-    console.log(`Administrador inicial preparado: ${email} / ${password}`);
+    console.log(`Administrador único preparado: ${email} / ${password}`);
   } finally {
     await prisma.$disconnect();
   }
