@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0 --port 3002",
     "build": "prisma generate && next build",
+    "prestart": "prisma migrate deploy",
     "start": "next start --hostname 0.0.0.0 --port 3002",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -12,6 +13,7 @@
     "prisma:validate": "prisma validate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:seed": "npx tsx prisma/seed-admin.ts",
     "db:studio": "prisma studio",
     "db:seed-admin": "tsx prisma/seed-admin.ts",
     "db:import-legacy-products": "tsx prisma/import-legacy-products.ts"
