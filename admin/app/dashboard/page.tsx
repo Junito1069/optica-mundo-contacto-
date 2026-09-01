@@ -4,7 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { Activity, ArrowUpRight, Boxes, ShoppingCart, TrendingUp, Wallet } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 
 type OrderRow = { id: string; orderNumber: string; status: string; total: number | string; createdAt: string; customerName: string };
 type ProductRow = { id: string; name: string; stock: number; minimumStock: number; status: string };

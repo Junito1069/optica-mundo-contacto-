@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { serverEnv } from "@/lib/env";
 
 const allowedOrigins = new Set([
+  serverEnv.FRONTEND_URL,
   serverEnv.WEB_ORIGIN,
   serverEnv.ADMIN_ORIGIN,
   ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"]),
   ...serverEnv.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean),
-]);
+].filter((origin): origin is string => Boolean(origin)));
 
 export function withCors(request: Request, response: NextResponse) {
   const origin = request.headers.get("origin");

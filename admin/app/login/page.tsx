@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -29,8 +29,10 @@ export default function AdminLoginPage() {
         setError(payload.error ?? "No fue posible iniciar sesión.");
         return;
       }
+
       router.replace("/dashboard");
       router.refresh();
+      window.location.assign("/dashboard");
     } catch {
       setError("No se pudo conectar con el servidor administrativo.");
     } finally {

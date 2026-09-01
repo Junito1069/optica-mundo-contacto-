@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useCart } from "@/components/Cart/CartProvider";
 
-const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002").replace(/\/$/, "");
+import { apiUrl } from "@/lib/api-url";
 const whatsappPhone = "18492504605";
 const profileStoragePrefix = "mundo-contacto-checkout-profile:";
 

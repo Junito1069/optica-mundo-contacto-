@@ -4,7 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { Pencil, Plus, Trash2, UserCog } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 
 type Role = "ADMIN" | "EMPLOYEE" | "CLIENT";
 type UserRow = {

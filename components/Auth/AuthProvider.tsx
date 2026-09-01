@@ -2,8 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { isAdminRole, isCustomerRole, type PublicUser } from "@/types/user";
-
-const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002").replace(/\/$/, "");
+import { apiUrl } from "@/lib/api-url";
 type AuthContextValue = {
   user: PublicUser | null;
   loading: boolean;

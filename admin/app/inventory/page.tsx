@@ -4,7 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { ArrowDownToLine, ArrowUpFromLine, SlidersHorizontal } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 type Product = { id: string; name: string; sku: string; stock: number; minimumStock: number };
 type Movement = { id: string; type: "ENTRY" | "EXIT" | "ADJUSTMENT"; quantity: number; reason: string; userName: string | null; createdAt: string };
 type InventoryData = { product: Product; movements: Movement[] };

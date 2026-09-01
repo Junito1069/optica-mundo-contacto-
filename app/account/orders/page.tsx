@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/Auth/AuthProvider";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+import { apiUrl } from "@/lib/api-url";
 
 export default function AccountOrdersPage() {
   const { user, loading } = useAuth();

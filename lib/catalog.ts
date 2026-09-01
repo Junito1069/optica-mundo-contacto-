@@ -1,6 +1,6 @@
 import type { Product } from "@/types/product";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 
 type ApiProduct = {
   id: string; name: string; slug: string; description: string; price: number; stock: number; sku: string; imageUrl: string | null;

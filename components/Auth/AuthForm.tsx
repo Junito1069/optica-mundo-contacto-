@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/Auth/AuthProvider";
-
-const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002").replace(/\/$/, "");
+import { apiUrl } from "@/lib/api-url";
 
 function resolvePostLoginRoute(role?: string | null, fallbackUrl?: string | null) {
   const normalizedRole = role?.toLowerCase();

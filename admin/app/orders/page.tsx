@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
 
-const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002").replace(/\/$/, "");
+import { apiUrl } from "@/lib/api-url";
 
 type OrderItem = {
   id: string;

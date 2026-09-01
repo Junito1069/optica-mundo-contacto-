@@ -128,7 +128,31 @@ If the app still says `Not Found`, the most common root cause is:
 - the frontend fallback is not returning `index.html` for React routes
 - Railway is exposing a port different from the one your Node server listens on
 
----
+## 6) Required environment variables
+
+Configure these variables in Railway for the corresponding service. `NEXT_PUBLIC_API_URL` is read at frontend build time, so redeploy the frontend after changing it.
+
+### Frontend service
+
+```text
+PORT=<Railway-provided port>
+NEXT_PUBLIC_API_URL=https://<api-service>.up.railway.app
+```
+
+### API service
+
+```text
+PORT=<Railway-provided port>
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+AUTH_SECRET=<at least 32 random characters>
+BACKEND_URL=https://<api-service>.up.railway.app
+FRONTEND_URL=https://<frontend-service>.up.railway.app
+CORS_ORIGINS=https://<frontend-service>.up.railway.app
+```
+
+If the admin app is deployed separately, add its public URL to `CORS_ORIGINS`, separated by commas, and set the same `NEXT_PUBLIC_API_URL` in that service.
+
+## 7) Recommended final setup for this repo
 
 ## 6) Recommended final setup for this repo
 

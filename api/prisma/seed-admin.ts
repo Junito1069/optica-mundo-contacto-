@@ -7,9 +7,9 @@ const fallbackName = "Administrador";
 const fallbackEmail = "admin@gmail.com";
 const fallbackPassword = "admin";
 
-const name = process.env.INITIAL_ADMIN_NAME?.trim() ?? fallbackName;
-const email = (process.env.INITIAL_ADMIN_EMAIL?.trim().toLowerCase() ?? fallbackEmail).toLowerCase();
-const password = process.env.INITIAL_ADMIN_PASSWORD ?? fallbackPassword;
+const name = process.env.INITIAL_ADMIN_NAME?.trim() || fallbackName;
+const email = (process.env.INITIAL_ADMIN_EMAIL?.trim().toLowerCase() || fallbackEmail).toLowerCase();
+const password = process.env.INITIAL_ADMIN_PASSWORD?.trim() || fallbackPassword;
 const databaseUrl = process.env.DATABASE_URL;
 
 async function main() {
@@ -23,19 +23,16 @@ async function main() {
 
   const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: databaseUrl }) });
   try {
-    await prisma.adminUser.deleteMany({
-      where: {
-        email: { not: email },
-      },
-    });
-
     const passwordHash = await bcrypt.hash(password, 12);
-    await prisma.adminUser.upsert({
+
+    const admin = await prisma.adminUser.upsert({
       where: { email },
       create: { name, email, passwordHash, role: "ADMIN", active: true },
       update: { name, passwordHash, role: "ADMIN", active: true },
     });
-    console.log(`Administrador único preparado: ${email} / ${password}`);
+
+    console.log(`Administrador sincronizado correctamente: ${admin.email}`);
+    console.log(`Credenciales del seed: email=${admin.email} | password=${password}`);
   } finally {
     await prisma.$disconnect();
   }

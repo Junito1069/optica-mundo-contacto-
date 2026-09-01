@@ -9,6 +9,6 @@ export function getPrisma() {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
   const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: getDatabaseUrl() }) });
-  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+  globalForPrisma.prisma = prisma;
   return prisma;
 }

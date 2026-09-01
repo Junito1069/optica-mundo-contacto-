@@ -5,7 +5,7 @@ import { Boxes, FileText, LayoutDashboard, LogOut, PackageSearch, Tags, Users } 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 type AdminUser = { name: string; email: string; role: "ADMIN" | "EMPLOYEE" };
 
 const navigation = [

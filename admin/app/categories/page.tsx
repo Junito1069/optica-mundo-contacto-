@@ -4,7 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { Eye, EyeOff, Plus } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002";
+import { apiUrl } from "@/lib/api-url";
 type Category = { id: string; name: string; slug: string; description: string | null; published: boolean; productCount: number };
 const initialForm = { name: "", slug: "", description: "", published: false };
 

@@ -6,7 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0 --port 3002",
     "build": "prisma generate && next build",
     "prestart": "prisma migrate deploy",
-    "start": "next start --hostname 0.0.0.0 --port 3002",
+    "start": "next start --hostname 0.0.0.0 --port ${PORT:-3002}",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",

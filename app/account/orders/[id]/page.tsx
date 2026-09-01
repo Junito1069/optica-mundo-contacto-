@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/components/Auth/AuthProvider";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+import { apiUrl } from "@/lib/api-url";
 
 export default function OrderDetail() {
   const params = useParams();
