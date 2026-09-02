@@ -1,8 +1,5 @@
 const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 const localDevFallbackApiUrl = "http://localhost:3002";
+const productionFallbackApiUrl = "https://optica-mundo-contacto-bakend2-production-d0cb.up.railway.app";
 
-if (!configuredApiUrl && process.env.NODE_ENV === "production") {
-  throw new Error("Falta NEXT_PUBLIC_API_URL. Configúralo en Railway para este frontend.");
-}
-
-export const apiUrl = (configuredApiUrl ?? localDevFallbackApiUrl).replace(/\/$/, "");
+export const apiUrl = (configuredApiUrl ?? (process.env.NODE_ENV === "production" ? productionFallbackApiUrl : localDevFallbackApiUrl)).replace(/\/$/, "");
