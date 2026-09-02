@@ -51,16 +51,33 @@ export default function CheckoutPage() {
     if (!hasDetails) { setEditing(true); setError("Completa tus datos de entrega antes de confirmar."); return; }
     setLoading(true);
     try {
+      const orderPayload = {
+        items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
+        customerName: String(user.name ?? "").trim(),
+        customerEmail: String(user.email ?? "").trim().toLowerCase(),
+        customerPhone: details.phone.trim(),
+        deliveryAddress: details.address.trim(),
+        deliveryCity: details.city.trim(),
+        deliverySector: details.sector.trim(),
+        deliveryReference: details.reference.trim(),
+        deliveryAddress2: null,
+        deliveryPostalCode: null,
+        deliveryNotes: null,
+        paymentMethod: "PAGO CONTRA ENTREGA",
+      };
+
       const response = await fetch(`${apiUrl}/api/orders`, {
         method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })), customerName: user.name, customerEmail: user.email, customerPhone: details.phone, deliveryAddress: details.address, deliveryCity: details.city, deliverySector: details.sector, deliveryReference: details.reference, deliveryAddress2: null, deliveryPostalCode: null, deliveryNotes: null, paymentMethod: "PAGO CONTRA ENTREGA" }),
+        body: JSON.stringify(orderPayload),
       });
       const text = await response.text();
       let payload: OrderResponse = {};
       if (text) { try { payload = JSON.parse(text) as OrderResponse; } catch { payload = { error: text }; } }
       if (!response.ok) {
         if (response.status === 401) { router.push(`/login?returnUrl=${encodeURIComponent("/checkout")}`); return; }
-        setError(payload.error ?? payload.message ?? "No fue posible crear el pedido."); return;
+        const apiErrorDetails = payload && typeof payload === "object" && "details" in payload ? (payload as { details?: Array<{ field?: string; message?: string }> }).details : undefined;
+        const message = apiErrorDetails && apiErrorDetails.length ? apiErrorDetails.map((detail) => `${detail.field ?? "campo"}: ${detail.message ?? "inválido"}`).join("; ") : payload.error ?? payload.message ?? "No fue posible crear el pedido.";
+        setError(message); return;
       }
       const order = payload.data;
       if (!order?.orderNumber) { setError("La respuesta del servidor no incluye el número de pedido."); return; }

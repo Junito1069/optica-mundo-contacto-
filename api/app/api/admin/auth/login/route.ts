@@ -7,8 +7,16 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const parsed = adminLoginSchema.safeParse(await request.json());
-    if (!parsed.success) return withCors(request, json({ error: parsed.error.issues[0]?.message ?? "Datos inválidos." }, { status: 400 }));
+    const rawBody = await request.json().catch(() => null);
+    const parsed = adminLoginSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      console.error("Admin login validation failed:", parsed.error.issues);
+      return withCors(request, json({
+        error: issue?.message ?? "Datos inválidos.",
+        details: parsed.error.issues.map((item) => ({ field: item.path.join("."), message: item.message })),
+      }, { status: 400 }));
+    }
 
     const user = await authenticateAdmin(parsed.data.email, parsed.data.password);
     if (!user) return withCors(request, json({ error: "Email o contraseña incorrectos." }, { status: 401 }));

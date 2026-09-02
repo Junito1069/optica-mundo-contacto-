@@ -18,4 +18,4 @@ export const orderCreateSchema = z.object({
   deliveryPostalCode: z.string().trim().max(20).optional().nullable().transform((value) => value || null),
   deliveryNotes: z.string().trim().max(1000).optional().nullable().transform((value) => value || null),
   paymentMethod: z.string().trim().default("PAGO CONTRA ENTREGA"),
-});
+}).strict();

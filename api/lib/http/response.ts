@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export class ApiError extends Error {
-  constructor(public readonly status: number, message: string) {
+  constructor(public readonly status: number, message: string, public readonly details?: unknown[]) {
     super(message);
   }
 }
@@ -22,7 +22,11 @@ export function json(data: unknown, init?: ResponseInit) {
 }
 
 export function errorResponse(error: unknown) {
-  if (error instanceof ApiError) return json({ error: error.message }, { status: error.status });
+  if (error instanceof ApiError) {
+    const payload: { error: string; details?: unknown[] } = { error: error.message };
+    if (error.details && error.details.length > 0) payload.details = error.details;
+    return json(payload, { status: error.status });
+  }
 
   if (isDatabaseConnectionError(error)) {
     return json({ error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });

@@ -50,6 +50,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       const target = resolvePostLoginRoute(payload.user?.role, returnUrl);
       router.replace(target);
       router.refresh();
+      window.location.assign(target);
     } catch {
       setError("No pudimos conectar con el servidor. Inténtalo nuevamente.");
     } finally {

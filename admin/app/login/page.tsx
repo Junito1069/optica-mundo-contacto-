@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
       });
       const payload = await response.json() as { error?: string };
       if (!response.ok) {

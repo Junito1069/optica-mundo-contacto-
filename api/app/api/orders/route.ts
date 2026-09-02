@@ -12,8 +12,15 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) return withCors(request, json({ error: "Tu sesión no es válida. Inicia sesión nuevamente." }, { status: 401 }));
 
-    const parsed = orderCreateSchema.safeParse(await request.json());
-    if (!parsed.success) throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.");
+    const rawBody = await request.json().catch(() => null);
+    const parsed = orderCreateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      const details = parsed.error.issues.map((issue) => ({
+        field: issue.path.length ? issue.path.join(".") : "(root)",
+        message: issue.message,
+      }));
+      throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.", details);
+    }
 
     const {
       items,
