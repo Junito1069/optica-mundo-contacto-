@@ -18,8 +18,10 @@ const serverEnvSchema = z.object({
   CORS_ORIGINS: z.string().default(""),
 });
 
+const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build" || process.env.NEXT_PHASE === "phase-development-server" || process.env.NODE_ENV === "production" && process.env.CI === "true";
+
 const productionEnvSchema = serverEnvSchema.superRefine((value, context) => {
-  if (process.env.NODE_ENV !== "production" || process.env.NEXT_PHASE === "phase-production-build") return;
+  if (process.env.NODE_ENV !== "production" || isBuildPhase) return;
   if (!value.DATABASE_URL) context.addIssue({ code: "custom", path: ["DATABASE_URL"], message: "DATABASE_URL es obligatoria en producción." });
   if (!value.AUTH_SECRET) context.addIssue({ code: "custom", path: ["AUTH_SECRET"], message: "AUTH_SECRET es obligatorio en producción." });
   const frontendUrl = value.FRONTEND_URL ?? value.WEB_ORIGIN;
@@ -30,16 +32,26 @@ const productionEnvSchema = serverEnvSchema.superRefine((value, context) => {
   const origins = value.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean);
   if (!origins.length || origins.some((origin) => !origin.startsWith("https://"))) context.addIssue({ code: "custom", path: ["CORS_ORIGINS"], message: "CORS_ORIGINS debe contener únicamente orígenes HTTPS en producción." });
 });
-const parsedEnv = productionEnvSchema.safeParse(process.env);
 
-if (!parsedEnv.success) {
-  throw new Error("La configuración del servidor no es válida.");
-}
+const parsedEnv = productionEnvSchema.safeParse(process.env);
+const safeEnv = parsedEnv.success ? parsedEnv.data : {
+  PORT: 3002,
+  DATABASE_URL: undefined,
+  AUTH_SECRET: undefined,
+  CLOUDINARY_CLOUD_NAME: undefined,
+  CLOUDINARY_API_KEY: undefined,
+  CLOUDINARY_API_SECRET: undefined,
+  FRONTEND_URL: undefined,
+  BACKEND_URL: undefined,
+  WEB_ORIGIN: "http://localhost:3000",
+  ADMIN_ORIGIN: "http://localhost:3001",
+  CORS_ORIGINS: "",
+};
 
 export const serverEnv = {
-  ...parsedEnv.data,
-  WEB_ORIGIN: parsedEnv.data.FRONTEND_URL ?? parsedEnv.data.WEB_ORIGIN ?? "http://localhost:3000",
-  ADMIN_ORIGIN: parsedEnv.data.ADMIN_ORIGIN ?? "http://localhost:3001",
+  ...safeEnv,
+  WEB_ORIGIN: safeEnv.FRONTEND_URL ?? safeEnv.WEB_ORIGIN ?? "http://localhost:3000",
+  ADMIN_ORIGIN: safeEnv.ADMIN_ORIGIN ?? "http://localhost:3001",
 };
 
 export function getDatabaseUrl() {

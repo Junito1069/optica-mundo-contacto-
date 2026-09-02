@@ -5,7 +5,7 @@ import { orderCreateSchema } from "@/lib/order/validation";
 import { getCurrentUser } from "@/lib/auth/session";
 
 export const runtime = "nodejs";
-
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {

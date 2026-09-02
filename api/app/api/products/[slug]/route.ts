@@ -4,6 +4,7 @@ import { withCors, preflight } from "@/lib/http/cors";
 import { serializeProduct } from "@/lib/catalog/serialize";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;

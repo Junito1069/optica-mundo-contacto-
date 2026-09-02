@@ -4,6 +4,7 @@ import { serverEnv } from "@/lib/env";
 import { getPrisma } from "@/lib/db/prisma";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   if (!serverEnv.DATABASE_URL) {
