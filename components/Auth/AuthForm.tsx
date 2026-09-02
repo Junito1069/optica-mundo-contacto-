@@ -47,7 +47,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       }
 
       await refresh();
-      const target = resolvePostLoginRoute(payload.user?.role, returnUrl);
+      const target = isRegister ? resolvePostLoginRoute(payload.user?.role, returnUrl) : "/";
       router.replace(target);
       router.refresh();
       window.location.assign(target);
