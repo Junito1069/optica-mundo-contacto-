@@ -117,7 +117,7 @@ export async function POST(request: Request) {
         break; // success
       } catch (err) {
         // if unique constraint conflict on orderNumber, retry
-        const code = (err as any)?.code;
+        const code = err && typeof err === "object" && "code" in err && typeof err.code === "string" ? err.code : undefined;
         if (code === "P2002" && attempt < maxAttempts - 1) {
           // retry
           continue;
