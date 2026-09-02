@@ -72,7 +72,7 @@ export default function ProductsPage() {
   function updateName(value: string) { updateForm("name", value); if (!editingId) updateForm("slug", value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")); }
   function readImage(file: File | undefined) {
     if (!file) { updateForm("imageUrl", editingId ? form.imageUrl : ""); return; }
-    if (!["image/png", "image/webp", "image/svg+xml"].includes(file.type)) { setError("La imagen debe ser PNG, WebP o SVG."); return; }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) { setError("La imagen debe ser JPG, PNG o WEBP."); return; }
     const reader = new FileReader(); reader.onload = () => updateForm("imageUrl", String(reader.result)); reader.readAsDataURL(file);
   }
 

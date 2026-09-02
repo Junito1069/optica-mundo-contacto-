@@ -5,6 +5,8 @@ import { writeAudit } from "@/lib/audit";
 import { getPrisma } from "@/lib/db/prisma";
 import { ApiError, errorResponse, json } from "@/lib/http/response";
 import { withCors, preflight } from "@/lib/http/cors";
+import { readProductBody } from "@/lib/catalog/request";
+import { getDatabaseUrl } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +15,7 @@ export async function GET(request: Request) {
 }
 export async function POST(request: Request) {
   try {
-    const user = await requireRequestAdmin(); const parsed = productSchema.safeParse(await request.json()); if (!parsed.success) throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.");
+    const user = await requireRequestAdmin(); getDatabaseUrl(); const parsed = productSchema.safeParse(await readProductBody(request)); if (!parsed.success) throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.");
     const product = await getPrisma().$transaction(async (transaction) => { const category = await transaction.category.findUnique({ where: { id: parsed.data.categoryId } }); if (!category) throw new ApiError(422, "La categoría seleccionada no existe."); const created = await transaction.product.create({ data: parsed.data, include: { category: true } }); if (created.stock > 0) await transaction.inventoryMovement.create({ data: { productId: created.id, userId: user.id, type: "ENTRY", quantity: created.stock, reason: "Stock inicial" } }); return created; });
     await writeAudit(user.id, product.status === "PUBLISHED" ? "PUBLISH_PRODUCT" : "CREATE_PRODUCT", "Product", product.id, { name: product.name, status: product.status }); return withCors(request, json({ data: serializeProduct(product) }, { status: 201 }));
   } catch (error) { return withCors(request, errorResponse(error)); }

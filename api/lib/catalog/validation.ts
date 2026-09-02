@@ -2,6 +2,10 @@ import { z } from "zod";
 
 const optionalText = z.string().trim().max(500).optional().nullable().transform((value) => value || null);
 const requiredMoney = z.coerce.number().finite().nonnegative().max(9999999.99);
+const imageUrl = z.string().trim().min(1, "Adjunta una imagen del producto.").refine((value) => {
+  if (/^data:image\/(jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(value)) return Buffer.byteLength(value.split(",", 2)[1] ?? "", "base64") <= 5 * 1024 * 1024;
+  return /^https?:\/\/[^\s]+$/i.test(value);
+}, "La imagen debe ser JPG, PNG o WEBP y no superar 5 MB.");
 
 export const categorySchema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres.").max(100),
@@ -23,7 +27,7 @@ export const productSchema = z.object({
   minimumStock: z.coerce.number().int().nonnegative().default(0),
   status: z.enum(["DRAFT", "PUBLISHED", "UNPUBLISHED"]).default("DRAFT"),
   featured: z.boolean().default(false),
-  imageUrl: z.string().url("La URL de imagen no es válida.").optional().nullable().transform((value) => value || null),
+  imageUrl: imageUrl.optional().nullable().transform((value) => value || null),
   brand: optionalText,
   type: optionalText,
   duration: optionalText,
