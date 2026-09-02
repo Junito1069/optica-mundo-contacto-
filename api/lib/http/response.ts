@@ -23,15 +23,15 @@ export function json(data: unknown, init?: ResponseInit) {
 
 export function errorResponse(error: unknown) {
   if (error instanceof ApiError) {
-    const payload: { error: string; details?: unknown[] } = { error: error.message };
+    const payload: { success: false; error: string; details?: unknown[] } = { success: false, error: error.message };
     if (error.details && error.details.length > 0) payload.details = error.details;
     return json(payload, { status: error.status });
   }
 
   if (isDatabaseConnectionError(error)) {
-    return json({ error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });
+    return json({ success: false, error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });
   }
 
   console.error("API request failed", error);
-  return json({ error: "Ocurrió un error interno." }, { status: 500 });
+  return json({ success: false, error: "Ocurrió un error interno." }, { status: 500 });
 }

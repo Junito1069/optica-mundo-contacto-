@@ -136,6 +136,10 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PUT(request: Request) {
+  return withCors(request, json({ success: false, error: "El endpoint de órdenes no admite PUT. Usa POST para crear una orden." }, { status: 405, headers: { Allow: "POST, OPTIONS" } }));
+}
+
 export function OPTIONS(request: Request) {
   return preflight(request);
 }

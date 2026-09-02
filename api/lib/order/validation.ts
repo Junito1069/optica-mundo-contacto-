@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const orderItemSchema = z.object({
   productId: z.string().uuid("Producto inválido."),
-  quantity: z.coerce.number().int().positive("La cantidad debe ser mayor a cero."),
+  quantity: z.number().int().positive("La cantidad debe ser mayor a cero."),
 });
 
 export const orderCreateSchema = z.object({
@@ -17,5 +17,5 @@ export const orderCreateSchema = z.object({
   deliveryAddress2: z.string().trim().max(250).optional().nullable().transform((value) => value || null),
   deliveryPostalCode: z.string().trim().max(20).optional().nullable().transform((value) => value || null),
   deliveryNotes: z.string().trim().max(1000).optional().nullable().transform((value) => value || null),
-  paymentMethod: z.string().trim().default("PAGO CONTRA ENTREGA"),
+  paymentMethod: z.literal("PAGO CONTRA ENTREGA").default("PAGO CONTRA ENTREGA"),
 }).strict();

@@ -11,7 +11,7 @@ const whatsappPhone = "18492504605";
 const profileStoragePrefix = "mundo-contacto-checkout-profile:";
 
 type DeliveryDetails = { phone: string; address: string; city: string; sector: string; reference: string };
-type OrderResponse = { error?: string; message?: string; data?: { orderNumber?: string; total?: number | string; items?: Array<{ name: string; quantity: number; unitPrice: number | string; total: number | string }> } };
+type OrderResponse = { success?: boolean; error?: string; message?: string; data?: { orderNumber?: string; total?: number | string; items?: Array<{ name: string; quantity: number; unitPrice: number | string; total: number | string }> } };
 const emptyDetails: DeliveryDetails = { phone: "", address: "", city: "", sector: "", reference: "" };
 
 function formatCurrency(value: number) { return `RD$ ${value.toFixed(2)}`; }
