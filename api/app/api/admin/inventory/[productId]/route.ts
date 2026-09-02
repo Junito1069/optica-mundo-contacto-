@@ -6,6 +6,7 @@ import { ApiError, errorResponse, json } from "@/lib/http/response";
 import { withCors, preflight } from "@/lib/http/cors";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function GET(request: Request, { params }: { params: Promise<{ productId: string }> }) {
   try {
     await requireRequestAdmin();

@@ -7,6 +7,7 @@ import { ApiError, errorResponse, json } from "@/lib/http/response";
 import { withCors, preflight } from "@/lib/http/cors";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try { await requireRequestAdmin(); const url = new URL(request.url); const query = url.searchParams.get("q")?.trim(); const products = await getPrisma().product.findMany({ where: query ? { OR: [{ name: { contains: query, mode: "insensitive" } }, { sku: { contains: query, mode: "insensitive" } }] } : undefined, include: { category: true }, orderBy: { updatedAt: "desc" } }); return withCors(request, json({ data: products.map(serializeProduct) })); } catch (error) { return withCors(request, errorResponse(error)); }
 }

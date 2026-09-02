@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { getPrisma } from "@/lib/db/prisma";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
@@ -16,6 +17,9 @@ export async function GET(request: Request) {
     const orders = await prisma.order.findMany({ orderBy: { createdAt: "desc" }, include: { items: true } });
     return withCors(request, json({ data: orders }));
   } catch (error) {
+    if (error instanceof Error && /DATABASE_URL|Prisma|connection|env/i.test(error.message)) {
+      return withCors(request, json({ error: "La base de datos no está configurada o no está disponible en este momento." }, { status: 503 }));
+    }
     return withCors(request, errorResponse(error));
   }
 }
