@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { featuredProducts } from "@/data/products";
+import { fetchPublicProducts } from "@/lib/catalog";
+import type { Product } from "@/types/product";
 
 type SearchOverlayProps = { open: boolean; onClose: () => void };
 
 export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
-  const results = useMemo(() => featuredProducts.filter((product) => `${product.name} ${product.category} ${product.description} ${product.sku} ${product.features.join(" ")}`.toLowerCase().includes(query.toLowerCase().trim())), [query]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const results = useMemo(() => products.filter((product) => `${product.name} ${product.category} ${product.description} ${product.sku} ${product.features.join(" ")}`.toLowerCase().includes(query.toLowerCase().trim())), [products, query]);
 
   useEffect(() => {
+    void fetchPublicProducts().then(setProducts);
     if (!open) return;
     const timer = window.setTimeout(() => inputRef.current?.focus(), 200);
     const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && onClose();

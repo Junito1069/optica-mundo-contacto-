@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const optionalString = z.preprocess((value) => value === "" ? undefined : value, z.string().min(1).optional());
 const optionalUrl = z.preprocess((value) => value === "" ? undefined : value, z.string().url().optional());
+const optionalOriginList = z.preprocess((value) => value === "" ? undefined : value, z.string().min(1).optional());
 
 const serverEnvSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3002),
@@ -11,10 +12,10 @@ const serverEnvSchema = z.object({
   CLOUDINARY_CLOUD_NAME: optionalString,
   CLOUDINARY_API_KEY: optionalString,
   CLOUDINARY_API_SECRET: optionalString,
-  FRONTEND_URL: optionalUrl,
+  FRONTEND_URL: optionalOriginList,
   BACKEND_URL: optionalUrl,
-  WEB_ORIGIN: optionalUrl,
-  ADMIN_ORIGIN: optionalUrl,
+  WEB_ORIGIN: optionalOriginList,
+  ADMIN_ORIGIN: optionalOriginList,
   CORS_ORIGINS: z.string().default(""),
 });
 
@@ -26,8 +27,10 @@ const productionEnvSchema = serverEnvSchema.superRefine((value, context) => {
   if (!value.AUTH_SECRET) context.addIssue({ code: "custom", path: ["AUTH_SECRET"], message: "AUTH_SECRET es obligatorio en producción." });
   const frontendUrl = value.FRONTEND_URL ?? value.WEB_ORIGIN;
   if (!frontendUrl) context.addIssue({ code: "custom", path: ["FRONTEND_URL"], message: "FRONTEND_URL es obligatoria en producción." });
-  for (const [name, origin] of [["FRONTEND_URL", frontendUrl], ["ADMIN_ORIGIN", value.ADMIN_ORIGIN], ["BACKEND_URL", value.BACKEND_URL]] as const) {
-    if (origin && !origin.startsWith("https://")) context.addIssue({ code: "custom", path: [name], message: `${name} debe usar HTTPS en producción.` });
+  for (const [name, origins] of [["FRONTEND_URL", value.FRONTEND_URL], ["WEB_ORIGIN", value.WEB_ORIGIN], ["ADMIN_ORIGIN", value.ADMIN_ORIGIN], ["BACKEND_URL", value.BACKEND_URL]] as const) {
+    if (origins && origins.split(",").some((origin) => !origin.trim().startsWith("https://"))) {
+      context.addIssue({ code: "custom", path: [name], message: `${name} debe contener únicamente URLs HTTPS.` });
+    }
   }
   const origins = value.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean);
   if (!origins.length || origins.some((origin) => !origin.startsWith("https://"))) context.addIssue({ code: "custom", path: ["CORS_ORIGINS"], message: "CORS_ORIGINS debe contener únicamente orígenes HTTPS en producción." });

@@ -1,17 +1,19 @@
 "use client";
 
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { featuredProducts } from "@/data/products";
+import { fetchPublicProducts } from "@/lib/catalog";
 
 type SortOption = "featured" | "price-low" | "price-high" | "name";
 
 export function ProductCatalog() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
+  const [catalogue, setCatalogue] = useState<import("@/types/product").Product[]>([]);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLowerCase();
-  const products = featuredProducts
+  useEffect(() => { void fetchPublicProducts().then(setCatalogue); }, []);
+  const products = catalogue
     .filter((product) => `${product.name} ${product.category} ${product.description} ${product.features.join(" ")}`.toLowerCase().includes(normalizedQuery))
     .toSorted((firstProduct, secondProduct) => {
       if (sort === "price-low") return firstProduct.price - secondProduct.price;

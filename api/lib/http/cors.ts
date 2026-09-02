@@ -2,20 +2,26 @@ import { NextResponse } from "next/server";
 import { serverEnv } from "@/lib/env";
 
 const normalizeOrigin = (value?: string) => value?.trim().replace(/\/$/, "") || undefined;
+const splitOrigins = (...values: Array<string | undefined>) => values
+  .flatMap((value) => value?.split(",") ?? [])
+  .map((origin) => normalizeOrigin(origin))
+  .filter((origin): origin is string => Boolean(origin));
 
-const allowedOrigins = new Set([
-  normalizeOrigin(serverEnv.FRONTEND_URL),
-  normalizeOrigin(serverEnv.WEB_ORIGIN),
-  normalizeOrigin(serverEnv.ADMIN_ORIGIN),
-  normalizeOrigin(process.env.FRONTEND_URL),
-  normalizeOrigin(process.env.BACKEND_URL),
+const allowedOrigins = new Set(splitOrigins(
+  serverEnv.FRONTEND_URL,
+  serverEnv.WEB_ORIGIN,
+  serverEnv.ADMIN_ORIGIN,
+  process.env.FRONTEND_URL,
+  process.env.WEB_ORIGIN,
+  process.env.ADMIN_ORIGIN,
+  process.env.BACKEND_URL,
+  process.env.CORS_ORIGINS,
   ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"]),
-  ...serverEnv.CORS_ORIGINS.split(",").map((origin) => normalizeOrigin(origin)).filter((origin): origin is string => Boolean(origin)),
-].filter((origin): origin is string => Boolean(origin)));
+));
 
 export function withCors(request: Request, response: NextResponse) {
   const origin = normalizeOrigin(request.headers.get("origin") ?? undefined);
-  const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : normalizeOrigin(process.env.FRONTEND_URL) ?? normalizeOrigin(serverEnv.FRONTEND_URL);
+  const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined;
 
   if (!allowedOrigin) return response;
 
