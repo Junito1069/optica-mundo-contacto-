@@ -24,6 +24,8 @@ export async function POST(request: Request) {
 
     const {
       items,
+      customerName,
+      customerEmail,
       customerPhone,
       deliveryAddress,
       deliveryCity,
@@ -34,6 +36,10 @@ export async function POST(request: Request) {
       deliveryNotes,
       paymentMethod,
     } = parsed.data;
+
+    if (customerName !== user.name || customerEmail.toLowerCase() !== user.email.toLowerCase()) {
+      throw new ApiError(422, "Los datos de la cuenta no coinciden con la sesión activa.");
+    }
 
     const productIds = items.map((item) => item.productId);
     if (new Set(productIds).size !== productIds.length) {
@@ -130,7 +136,13 @@ export async function POST(request: Request) {
       throw new ApiError(500, "No fue posible crear el pedido.");
     }
 
-    return withCors(request, json({ data: { id: order.id, orderNumber: order.orderNumber, total: Number(order.total), items: order.items } }, { status: 201 }));
+    const responseItems = order.items.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      unitPrice: Number(item.unitPrice),
+      total: Number(item.total),
+    }));
+    return withCors(request, json({ success: true, data: { id: order.id, orderNumber: order.orderNumber, total: Number(order.total), items: responseItems } }, { status: 201 }));
   } catch (error) {
     return withCors(request, errorResponse(error));
   }

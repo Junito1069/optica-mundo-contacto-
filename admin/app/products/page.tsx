@@ -12,7 +12,7 @@ type Product = {
   stock: number; minimumStock: number; status: ProductStatus; imageUrl: string | null; category: Category; updatedAt: string;
 };
 type ProductForm = { name: string; slug: string; description: string; categoryId: string; price: string; sku: string; stock: string; minimumStock: string; status: ProductStatus; imageUrl: string };
-type ApiError = { error?: string; details?: Array<{ field?: string; message?: string }> };
+type ApiError = { error?: string; message?: string; details?: Array<{ field?: string; message?: string }> };
 
 const initialForm: ProductForm = { name: "", slug: "", description: "", categoryId: "", price: "", sku: "", stock: "0", minimumStock: "0", status: "DRAFT", imageUrl: "" };
 
@@ -52,18 +52,18 @@ export default function ProductsPage() {
       const endpoint = editingId ? `${apiUrl}/api/admin/products/${editingId}` : `${apiUrl}/api/admin/products`;
       const response = await fetch(endpoint, { method: editingId ? "PATCH" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, price: Number(form.price), stock: Number(form.stock), minimumStock: Number(form.minimumStock) }) });
       const payload = await response.json() as ApiError;
-      if (!response.ok) { setError(payload.details?.map((detail) => `${detail.field ?? "campo"}: ${detail.message ?? "inválido"}`).join("; ") ?? payload.error ?? "No fue posible guardar el producto."); return; }
+      if (!response.ok) { setError(payload.details?.map((detail) => `${detail.field ?? "campo"}: ${detail.message ?? "inválido"}`).join("; ") ?? payload.message ?? payload.error ?? "No fue posible guardar el producto."); return; }
       setForm(initialForm); setEditingId(null); setShowForm(false); void loadProducts(query);
     } catch { setError("No se pudo conectar con el API."); } finally { setSaving(false); }
   }
 
   async function deleteProduct(product: Product) {
-    if (!window.confirm(`¿Eliminar el producto "${product.name}"? Esta acción no se puede deshacer.`)) return;
+    if (!window.confirm(`¿Retirar el producto "${product.name}" del catálogo? Sus pedidos históricos se conservarán.`)) return;
     setDeletingId(product.id); setError("");
     try {
       const response = await fetch(`${apiUrl}/api/admin/products/${product.id}`, { method: "DELETE", credentials: "include" });
       const payload = await response.json() as ApiError;
-      if (!response.ok) { setError(payload.error ?? "No fue posible eliminar el producto."); return; }
+      if (!response.ok) { setError(payload.message ?? payload.error ?? "No fue posible eliminar el producto."); return; }
       setProducts((current) => current.filter((item) => item.id !== product.id));
     } catch { setError("No se pudo conectar con el API."); } finally { setDeletingId(null); }
   }

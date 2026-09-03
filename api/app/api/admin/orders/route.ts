@@ -15,7 +15,17 @@ export async function GET(request: Request) {
 
     const prisma = getPrisma();
     const orders = await prisma.order.findMany({ orderBy: { createdAt: "desc" }, include: { items: true } });
-    return withCors(request, json({ data: orders }));
+    const serializedOrders = orders.map((order) => ({
+      ...order,
+      subtotal: Number(order.subtotal),
+      discountTotal: Number(order.discountTotal),
+      shippingTotal: Number(order.shippingTotal),
+      total: Number(order.total),
+      createdAt: order.createdAt.toISOString(),
+      updatedAt: order.updatedAt.toISOString(),
+      items: order.items.map((item) => ({ ...item, unitPrice: Number(item.unitPrice), total: Number(item.total) })),
+    }));
+    return withCors(request, json({ success: true, data: serializedOrders }));
   } catch (error) {
     if (error instanceof Error && /DATABASE_URL|Prisma|connection|env/i.test(error.message)) {
       return withCors(request, json({ error: "La base de datos no está configurada o no está disponible en este momento." }, { status: 503 }));

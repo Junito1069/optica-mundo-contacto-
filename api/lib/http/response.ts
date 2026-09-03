@@ -32,6 +32,10 @@ export function errorResponse(error: unknown) {
     return json({ success: false, error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });
   }
 
+  if (error instanceof Error && error.message === "La base de datos no está configurada.") {
+    return json({ success: false, error: "El servidor no tiene configurada la base de datos.", code: "DATABASE_NOT_CONFIGURED" }, { status: 503 });
+  }
+
   console.error("API request failed", error);
   return json({ success: false, error: "Ocurrió un error interno." }, { status: 500 });
 }
