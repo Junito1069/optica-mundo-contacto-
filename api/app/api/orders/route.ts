@@ -1,4 +1,4 @@
-import { ApiError, errorResponse, json } from "@/lib/http/response";
+import { ApiError, json } from "@/lib/http/response";
 import { getPrisma } from "@/lib/db/prisma";
 import { withCors, preflight } from "@/lib/http/cors";
 import { orderCreateSchema } from "@/lib/order/validation";
@@ -12,14 +12,33 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) return withCors(request, json({ error: "Tu sesión no es válida. Inicia sesión nuevamente." }, { status: 401 }));
 
-    const rawBody = await request.json().catch(() => null);
-    const parsed = orderCreateSchema.safeParse(rawBody);
+    let rawBody: unknown;
+    try {
+      rawBody = await request.json();
+    } catch {
+      throw new ApiError(400, "El cuerpo de la petición debe ser JSON válido.");
+    }
+    console.log("Datos recibidos en el servidor:", rawBody);
+
+    if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody) || !Array.isArray((rawBody as { items?: unknown }).items) || !(rawBody as { items: unknown[] }).items.length) {
+      throw new ApiError(400, "El carrito debe ser un arreglo con al menos un producto.");
+    }
+
+    const body = rawBody as Record<string, unknown>;
+    const normalizedBody = {
+      ...body,
+      items: (body.items as Array<Record<string, unknown>>).map((item) => ({
+        ...item,
+        quantity: typeof item.quantity === "string" ? Number.parseInt(item.quantity, 10) : item.quantity,
+      })),
+    };
+    const parsed = orderCreateSchema.safeParse(normalizedBody);
     if (!parsed.success) {
       const details = parsed.error.issues.map((issue) => ({
         field: issue.path.length ? issue.path.join(".") : "(root)",
         message: issue.message,
       }));
-      throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.", details);
+      throw new ApiError(400, parsed.error.issues[0]?.message ?? "Datos inválidos.", details);
     }
 
     const {
@@ -144,7 +163,12 @@ export async function POST(request: Request) {
     }));
     return withCors(request, json({ success: true, data: { id: order.id, orderNumber: order.orderNumber, total: Number(order.total), items: responseItems } }, { status: 201 }));
   } catch (error) {
-    return withCors(request, errorResponse(error));
+    console.error("Error en POST /orders:", error);
+    if (error instanceof ApiError) {
+      return withCors(request, json({ success: false, message: error.message, error: error.message, ...(error.details && { details: error.details }) }, { status: 400 }));
+    }
+    const message = error instanceof Error ? error.message : "Error interno al procesar la orden";
+    return withCors(request, json({ success: false, message: "Error interno al procesar la orden", error: message }, { status: 500 }));
   }
 }
 
