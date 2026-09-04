@@ -15,7 +15,7 @@ export const categorySchema = z.object({
   published: z.boolean().default(false),
 });
 
-export const productSchema = z.object({
+const productSchemaBase = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres.").max(160),
   slug: z.string().trim().min(2).max(180).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "El slug debe usar minúsculas, números y guiones."),
   description: z.string().trim().min(10, "La descripción debe tener al menos 10 caracteres.").max(4000),
@@ -39,9 +39,14 @@ export const productSchema = z.object({
   cylinder: optionalText,
   axis: optionalText,
   addition: optionalText,
-}).superRefine((value, context) => {
-  if (value.compareAtPrice !== null && value.compareAtPrice !== undefined && value.compareAtPrice < value.price) context.addIssue({ code: "custom", path: ["compareAtPrice"], message: "El precio anterior no puede ser menor al precio actual." });
 });
+
+function validateProductPricing(value: { compareAtPrice?: number | null; price?: number }, context: z.RefinementCtx) {
+  if (value.compareAtPrice !== null && value.compareAtPrice !== undefined && value.price !== undefined && value.compareAtPrice < value.price) context.addIssue({ code: "custom", path: ["compareAtPrice"], message: "El precio anterior no puede ser menor al precio actual." });
+}
+
+export const productSchema = productSchemaBase.superRefine(validateProductPricing);
+export const productUpdateSchema = productSchemaBase.partial().superRefine(validateProductPricing);
 
 export const inventoryMovementSchema = z.object({
   type: z.enum(["ENTRY", "EXIT", "ADJUSTMENT"]),

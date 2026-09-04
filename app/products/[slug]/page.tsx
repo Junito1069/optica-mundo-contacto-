@@ -6,8 +6,15 @@ import type { Product } from "@/types/product";
 
 type ApiProduct = Omit<Product, "category" | "images" | "features" | "variants"> & { imageUrl: string | null; category: { name: string }; material: string | null; type: string | null; duration: string | null; boxContent: string | null };
 
+export async function generateStaticParams() {
+  const response = await fetch(`${apiUrl}/api/products`, { cache: "force-cache" });
+  if (!response.ok) throw new Error("No fue posible cargar los productos para la exportación.");
+  const payload = await response.json() as { data: Array<{ slug: string }> };
+  return payload.data.map((product) => ({ slug: product.slug }));
+}
+
 async function getProduct(slug: string) {
-  const response = await fetch(`${apiUrl}/api/products/${encodeURIComponent(slug)}`, { cache: "no-store" });
+  const response = await fetch(`${apiUrl}/api/products/${encodeURIComponent(slug)}`, { cache: "force-cache" });
   if (response.status === 404) notFound();
   if (!response.ok) throw new Error("No fue posible cargar el producto.");
   const payload = await response.json() as { data: ApiProduct };

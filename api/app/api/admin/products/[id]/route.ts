@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { productSchema } from "@/lib/catalog/validation";
+import { productUpdateSchema } from "@/lib/catalog/validation";
 import { serializeProduct } from "@/lib/catalog/serialize";
 import { requireRequestAdmin } from "@/lib/auth/request";
 import { writeAudit } from "@/lib/audit";
@@ -20,7 +20,7 @@ async function updateProduct(request: Request, { params }: { params: Promise<{ i
     const user = await requireRequestAdmin();
     getDatabaseUrl();
     const body = await readProductBody(request);
-    const parsed = productSchema.partial().safeParse(body);
+    const parsed = productUpdateSchema.safeParse(body);
     if (!parsed.success) {
       throw new ApiError(422, parsed.error.issues[0]?.message ?? "Datos inválidos.", parsed.error.issues.map((issue) => ({ field: issue.path.join(".") || "(root)", message: issue.message })));
     }

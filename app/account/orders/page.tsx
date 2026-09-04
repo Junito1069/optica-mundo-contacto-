@@ -6,9 +6,11 @@ import { useAuth } from "@/components/Auth/AuthProvider";
 
 import { apiUrl } from "@/lib/api-url";
 
+type OrderSummary = { id: string; orderNumber: string; total: number; status: string };
+
 export default function AccountOrdersPage() {
   const { user, loading } = useAuth();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
 
   useEffect(() => {
@@ -24,5 +26,5 @@ export default function AccountOrdersPage() {
   if (!user) return <main className="account-page"><Link className="brand" href="/">MUNDO <span>CONTACTO</span></Link><p>Debes iniciar sesión para ver tus pedidos.</p></main>;
   if (loadingOrders) return <main className="account-page"><p>Cargando pedidos...</p></main>;
 
-  return <main className="account-page"><Link className="brand" href="/">MUNDO <span>CONTACTO</span></Link><h1>Mis pedidos</h1>{!orders.length ? <p>No tienes pedidos todavía.</p> : <ul className="orders-list">{orders.map((o) => <li key={o.id}><Link href={`/account/orders/${o.id}`}>{o.orderNumber} — RD$ {Number(o.total).toFixed(2)} — {o.status}</Link></li>)}</ul>}<Link className="secondary-action" href="/">IR A LA TIENDA</Link></main>;
+  return <main className="account-page"><Link className="brand" href="/">MUNDO <span>CONTACTO</span></Link><h1>Mis pedidos</h1>{!orders.length ? <p>No tienes pedidos todavía.</p> : <ul className="orders-list">{orders.map((o) => <li key={o.id}><Link href={`/account/order-detail?id=${encodeURIComponent(o.id)}`}>{o.orderNumber} — RD$ {Number(o.total).toFixed(2)} — {o.status}</Link></li>)}</ul>}<Link className="secondary-action" href="/">IR A LA TIENDA</Link></main>;
 }
