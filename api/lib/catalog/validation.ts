@@ -22,7 +22,7 @@ export const productSchema = z.object({
   categoryId: z.string().uuid("Selecciona una categoría válida."),
   price: requiredMoney,
   compareAtPrice: requiredMoney.optional().nullable(),
-  sku: z.string().trim().min(2).max(80).transform((value) => value.toUpperCase()),
+  sku: z.string().trim().max(80).transform((value) => value ? value.toUpperCase() : undefined).optional(),
   stock: z.coerce.number().int().nonnegative(),
   minimumStock: z.coerce.number().int().nonnegative().default(0),
   status: z.enum(["DRAFT", "PUBLISHED", "UNPUBLISHED"]).default("DRAFT"),
