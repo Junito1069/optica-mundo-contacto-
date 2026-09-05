@@ -26,7 +26,8 @@ export default function CategoriesPage() {
   async function createCategory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(""); setSaving(true);
     try {
-      const response = await fetch(`${apiUrl}/api/admin/categories`, { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const body = { ...form, imageUrl: null };
+      const response = await fetch(`${apiUrl}/api/admin/categories`, { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const payload = await response.json() as { error?: string };
       if (!response.ok) { setError(payload.error ?? "No fue posible crear la categoría."); return; }
       setForm(initialForm); setShowForm(false); void loadCategories();

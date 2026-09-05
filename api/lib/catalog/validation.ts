@@ -11,7 +11,7 @@ export const categorySchema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres.").max(100),
   slug: z.string().trim().min(2).max(120).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "El slug debe usar minúsculas, números y guiones."),
   description: optionalText,
-  imageUrl: z.string().trim().min(1, "Adjunta una imagen del producto.").refine((value) => /^(data:image\/(png|webp|svg\+xml);base64,|https?:\/\/.*\.(png|webp|svg)(\?.*)?$)/i.test(value), "La imagen debe ser PNG, WebP o SVG."),
+  imageUrl: z.string().trim().min(1, "Adjunta una imagen del producto.").refine((value) => /^(data:image\/(png|webp|svg\+xml);base64,|https?:\/\/.*\.(png|webp|svg)(\?.*)?$)/i.test(value), "La imagen debe ser PNG, WebP o SVG.").optional().nullable().transform((value) => value || null),
   published: z.boolean().default(false),
 });
 
