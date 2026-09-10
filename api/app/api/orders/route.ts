@@ -1,4 +1,4 @@
-import { ApiError, json } from "@/lib/http/response";
+import { ApiError, errorResponse, json } from "@/lib/http/response";
 import { getPrisma } from "@/lib/db/prisma";
 import { withCors, preflight } from "@/lib/http/cors";
 import { orderCreateSchema } from "@/lib/order/validation";
@@ -164,11 +164,7 @@ export async function POST(request: Request) {
     return withCors(request, json({ success: true, data: { id: order.id, orderNumber: order.orderNumber, total: Number(order.total), items: responseItems } }, { status: 201 }));
   } catch (error) {
     console.error("Error en POST /orders:", error);
-    if (error instanceof ApiError) {
-      return withCors(request, json({ success: false, message: error.message, error: error.message, ...(error.details && { details: error.details }) }, { status: 400 }));
-    }
-    const message = error instanceof Error ? error.message : "Error interno al procesar la orden";
-    return withCors(request, json({ success: false, message: "Error interno al procesar la orden", error: message }, { status: 500 }));
+    return withCors(request, errorResponse(error));
   }
 }
 

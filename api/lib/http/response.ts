@@ -17,6 +17,9 @@ const isDatabaseConnectionError = (error: unknown) => {
     || message.includes("connection terminated unexpectedly");
 };
 
+const isDatabaseConfigurationError = (error: unknown) => error instanceof Error
+  && /DATABASE_URL|base de datos no está configurada|PrismaClientInitializationError/i.test(error.message);
+
 export function json(data: unknown, init?: ResponseInit) {
   return NextResponse.json(data, init);
 }
@@ -28,12 +31,12 @@ export function errorResponse(error: unknown) {
     return json(payload, { status: error.status });
   }
 
-  if (isDatabaseConnectionError(error)) {
-    return json({ success: false, error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", message: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });
+  if (isDatabaseConfigurationError(error)) {
+    return json({ success: false, error: "El servidor no tiene configurada la base de datos.", message: "El servidor no tiene configurada la base de datos.", code: "DATABASE_NOT_CONFIGURED" }, { status: 503 });
   }
 
-  if (error instanceof Error && error.message === "La base de datos no está configurada.") {
-    return json({ success: false, error: "El servidor no tiene configurada la base de datos.", message: "El servidor no tiene configurada la base de datos.", code: "DATABASE_NOT_CONFIGURED" }, { status: 503 });
+  if (isDatabaseConnectionError(error)) {
+    return json({ success: false, error: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", message: "No se pudo conectar a la base de datos. Inténtalo nuevamente en unos segundos.", code: "DATABASE_UNAVAILABLE" }, { status: 503 });
   }
 
   console.error("API request failed", error);
