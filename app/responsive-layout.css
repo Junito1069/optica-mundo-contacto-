@@ -81,8 +81,9 @@
 
   .object-card,
   .object-card:nth-child(2) {
-    display: block;
-    min-height: 440px;
+    display: flex;
+    min-height: 0;
+    height: auto;
   }
 
   .object-visual {
@@ -99,14 +100,14 @@
   }
 
   .object-action {
-    bottom: 0;
-    left: 22px;
-    right: 22px;
+    position: static;
+    margin: 0 22px;
     min-height: 52px;
   }
 
   .object-info {
-    padding-bottom: 66px;
+    min-height: 0;
+    padding-bottom: 12px;
   }
 
   .manifesto {
@@ -134,7 +135,6 @@
   }
 
   .object-action {
-    left: 20px;
-    right: 20px;
+    margin-inline: 0;
   }
 }
