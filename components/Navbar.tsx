@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/Auth/AuthProvider";
 
 const navigation = ["INICIO", "PRODUCTOS", "CATEGORÍAS", "NOSOTROS"] as const;
-const destinations: Record<(typeof navigation)[number], string> = { INICIO: "/", PRODUCTOS: "/productos", CATEGORÍAS: "/categorias", NOSOTROS: "/#nosotros" };
+const destinations: Record<(typeof navigation)[number], string> = { INICIO: "/", PRODUCTOS: "/productos", CATEGORÍAS: "/categorias", NOSOTROS: "/nosotros" };
 
 type NavbarProps = { onSearchOpen: () => void };
 
@@ -16,7 +16,7 @@ export function Navbar({ onSearchOpen }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
-  const activeItem = pathname === "/productos" ? "PRODUCTOS" : pathname === "/categorias" ? "CATEGORÍAS" : "INICIO";
+  const activeItem = pathname === "/productos" ? "PRODUCTOS" : pathname === "/categorias" ? "CATEGORÍAS" : pathname === "/nosotros" ? "NOSOTROS" : "INICIO";
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24);

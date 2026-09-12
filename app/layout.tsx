@@ -6,6 +6,7 @@ import "./categories.css";
 import "./hero-layout.css";
 import "./responsive-layout.css";
 import "./theme.css";
+import "./nosotros/nosotros.css";
 import { Providers } from "@/components/Providers";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
